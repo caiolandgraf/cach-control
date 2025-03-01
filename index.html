@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cash Control</title>
+
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+
+  <body
+    class="bg-zinc-900 antialiazed font-sans text-zinc-100 p-4 md:p-8 w-dvw"
+  >
+    <main class="flex flex-col md:grid md:grid-cols-6 gap-4 w-full">
+      <!-- FORM -->
+      <div
+        class="md:col-span-2 border border-zinc-700 p-5 rounded-md flex flex-col gap-4 w-full"
+      >
+        <h1 class="text-xl font-semibold tracking-tight">
+          Cadastre suas contas
+        </h1>
+
+        <form class="flex flex-col gap-4" id="createBillForm">
+          <input type="hidden" name="billId" id="billId" />
+
+          <label class="flex flex-col gap-1">
+            <span class="text-sm cursor-pointer">Descrição:</span>
+            <input
+              required
+              id="description"
+              type="text"
+              placeholder="Ex: Mercado"
+              class="border border-zinc-700 rounded-md py-1 px-3 outline-none focus-within:border-violet-500"
+            />
+          </label>
+
+          <label class="flex flex-col gap-1">
+            <span class="text-sm cursor-pointer">Valor:</span>
+            <input
+              required
+              id="amount"
+              type="text"
+              placeholder="0,00"
+              class="border border-zinc-700 rounded-md py-1 px-3 outline-none focus-within:border-violet-500"
+            />
+          </label>
+
+          <div class="flex flex-row gap-2 w-full">
+            <label class="flex flex-col gap-1 w-full">
+              <span class="text-sm cursor-pointer">Tipo:</span>
+              <select
+                required
+                id="type"
+                name="type"
+                class="border border-zinc-700 rounded-md py-1 px-3 outline-none focus-within:border-violet-500"
+              >
+                <option value="income">Receita</option>
+                <option value="expense">Despesa</option>
+              </select>
+            </label>
+
+            <label class="flex flex-col gap-1 w-full">
+              <span class="text-sm cursor-pointer">Status:</span>
+              <select
+                required
+                id="status"
+                name="status"
+                class="border border-zinc-700 rounded-md py-1 px-3 outline-none focus-within:border-violet-500"
+              >
+                <option value="paid">Pago</option>
+                <option value="unpaid">Á Pagar</option>
+              </select>
+            </label>
+          </div>
+
+          <label class="flex flex-col gap-1">
+            <span class="text-sm cursor-pointer">OBS:</span>
+            <textarea
+              rows="3"
+              id="obs"
+              class="border border-zinc-700 rounded-md py-1 px-3 outline-none focus-within:border-violet-500"
+            ></textarea>
+          </label>
+
+          <button
+            id="submitButton"
+            type="submit"
+            class="border border-violet-500 bg-violet-500 flex items-center justify-center font-bold text-lg py-2 rounded-md cursor-pointer hover:bg-violet-600 transition hover:border-violet-600"
+          >
+            Cadastrar
+          </button>
+
+          <button
+            onclick="cancelEdit()"
+            id="resetButton"
+            type="reset"
+            class="hidden border border-zinc-700 bg-zinc-700 flex items-center justify-center font-bold text-lg py-2 rounded-md cursor-pointer hover:bg-zinc-800 transition hover:border-zinc-800"
+          >
+            Cancelar
+          </button>
+        </form>
+      </div>
+
+      <!-- TABLE -->
+      <div
+        class="md:col-span-4 border border-zinc-700 p-5 rounded-md flex flex-col gap-4 w-full"
+      >
+        <header class="flex flex-col md:flex-row justify-between items-center">
+          <h1 class="text-xl font-semibold tracking-tight">
+            Suas contas cadastradas
+          </h1>
+
+          <div class="flex flex-row gap-1 items-center">
+            <input
+              type="text"
+              placeholder="Pesquisar..."
+              class="border border-zinc-700 rounded-md px-2 outline-none focus-within:border-violet-500 text-sm py-0.5"
+            />
+
+            <button
+              class="rounded-md border border-zinc-700 px-2 hover:bg-zinc-800 text-zinc-400 hover:text-white transition cursor-pointer outline-none focus-within:border-violet-500"
+            >
+              <i class="fa fa-search"></i>
+            </button>
+          </div>
+        </header>
+
+        <div class="border border-zinc-700 rounded-md overflow-x-auto w-full">
+          <table class="w-full">
+            <thead>
+              <tr>
+                <th class="border-b border-zinc-700 text-left px-3">
+                  Descrição
+                </th>
+                <th class="border-b border-zinc-700 text-left px-3 py-1">
+                  Valor
+                </th>
+                <th class="border-b border-zinc-700 text-left px-3 py-1">
+                  Tipo
+                </th>
+                <th class="border-b border-zinc-700 text-left px-3 py-1">
+                  Status
+                </th>
+                <th
+                  class="border-b border-zinc-700 text-left px-3 py-1 w-[50px]"
+                >
+                  Ações
+                </th>
+              </tr>
+            </thead>
+
+            <tbody id="billsTable"></tbody>
+          </table>
+        </div>
+
+        <div class="flex gap-1 justify-end">
+          <button
+            class="py-1 px-2 hover:bg-zinc-800 transition cursor-pointer rounded-md border border-zinc-700 flex items-center justify-center text-sm"
+          >
+            <i class="fa-solid fa-angles-left"></i>
+          </button>
+          <button
+            class="py-1 px-2.5 hover:bg-zinc-800 transition cursor-pointer rounded-md border border-zinc-700 flex items-center justify-center text-sm"
+          >
+            1
+          </button>
+          <button
+            class="py-1 px-2.5 hover:bg-zinc-800 transition cursor-pointer rounded-md border border-zinc-700 flex items-center justify-center text-sm"
+          >
+            2
+          </button>
+          <button
+            class="py-1 px-2.5 hover:bg-zinc-800 transition cursor-pointer rounded-md border border-zinc-700 flex items-center justify-center text-sm"
+          >
+            3
+          </button>
+          <button
+            class="py-1 px-2.5 hover:bg-zinc-800 transition cursor-pointer rounded-md border border-zinc-700 flex items-center justify-center text-sm"
+          >
+            4
+          </button>
+          <button
+            class="py-1 px-2 hover:bg-zinc-800 transition cursor-pointer rounded-md border border-zinc-700 flex items-center justify-center text-sm"
+          >
+            <i class="fa-solid fa-angles-right"></i>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <script type="module" src="src/index.js"></script>
+  </body>
+</html>
