@@ -8,4 +8,4 @@ What we use in this project?
 
 ---
 
-With 💜 [@caiolandgraf](https://github.com/caiolandgraf) and [Conexão Infinita](https://https://discord.gg/JvgV6y6eZ4), a simple school server :D
+With 💜 [@caiolandgraf](https://github.com/caiolandgraf) and [Conexão Infinita](https://discord.gg/JvgV6y6eZ4), a simple school server :D
